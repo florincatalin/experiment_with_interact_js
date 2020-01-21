@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<!--
+ * Experiment with interact.js, Copyright (c) 2020 Florin Catalin, <florincybereye@yahoo.com>, Released under the MIT License
+ * interact.js is created by Taye Adeyemi <dev@taye.me> and released under the MIT License, https://github.com/taye/interact.js
+-->
+
+
+<head>
+    <meta charset="utf-8">
+    <script src="interact.js"></script>
+    <link rel="stylesheet" href="">
+    
+    <style>
+.holder {
+  width: 500px;
+  height: 500px;
+}
+.dropzone {
+  background-color: #ccc;
+  padding: 10px;
+  width: 500px;
+  height: 200px;
+  float:left;
+}
+
+#dropzone01 {
+border-style: dotted;
+  padding:5px;
+  margin: 5px;
+}
+
+#dropzone02 {
+border-style: dashed;
+  padding:5px;
+  margin: 5px;
+}
+
+.item {
+  width: 100px;
+  height: 100px;
+  float:left;
+  background-color: #2196F3;
+  color: white;
+  padding:10px;
+  margin: 10px;
+}
+
+.drop-active {
+  border-color: #aaa;
+}
+
+.drop-target {
+  background-color: #000;
+  color: #FFF;
+  border-color: #fff;
+  border-style: solid;
+}
+
+.flex-container{
+display: -webkit-flex;
+display: flex;
+}
+    </style>
+    
+    
+</head>
+<body>
+
+<div class="holder">
+<div id="item01" class="item draggable flex-item">  
+  <p> Item 01 </p>
+</div>  
+<div id="item02" class="item draggable flex-item">  
+    <p> Item 02 </p>
+</div>  
+<div id="item03" class="item draggable flex-item">  
+    <p> Item 03 </p>
+</div> 
+<div id="dropzone01" class="dropzone flex-container">Dropzone 01</div> 
+<div id="dropzone02" class="dropzone flex-container">Dropzone 02</div>  
+</div>
+
+<script>
+    var draggableElement;
+    var dropzoneElement;
+
+interact('.draggable')  
+  .draggable({
+    // enable inertial throwing
+    inertia: true,
+    // keep the element within the area of it's parent
+    restrict: {
+      restriction: "parent",
+      endOnly: true,
+      elementRect: { top: 0, left: 0, bottom: 1, right: 1 }
+    },
+    // enable autoScroll
+    autoScroll: true,
+    // call this function on every dragmove event
+    onmove: dragMoveListener,
+	maxPerElement: 3
+  });
+
+  function dragMoveListener (event) {
+    var target = event.target,
+        // keep the dragged position in the data-x/data-y attributes
+        x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx,
+        y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
+
+    // translate the element
+    target.style.webkitTransform =
+    target.style.transform =
+      'translate(' + x + 'px, ' + y + 'px)';
+
+    // update the posiion attributes
+    target.setAttribute('data-x', x);
+    target.setAttribute('data-y', y);
+  }
+
+// enable draggables to be dropped into this
+interact('.dropzone').dropzone({  
+  // Require a 80% element overlap for a drop to be possible
+  overlap: 0.80,
+
+  // listen for drop related events:
+
+  ondropactivate: function (event) {
+    // add active dropzone feedback
+    event.target.classList.add('drop-active');
+  },
+  ondragenter: function (event) {
+        draggableElement = event.relatedTarget,
+        dropzoneElement = event.target;
+
+    // feedback the possibility of a drop
+    dropzoneElement.classList.add('drop-target');
+  },
+  ondragleave: function (event) {
+    // remove the drop feedback style
+    event.target.classList.remove('drop-target');
+  },
+  ondrop: function (event) {
+    //event.relatedTarget.textContent = 'Dropped';
+	//alert(draggableElement.id);
+	//alert(dropzoneElement.id);
+	verifica();
+  },
+  
+  ondropdeactivate: function (event) {
+    // remove active dropzone feedback
+    event.target.classList.remove('drop-active');
+    event.target.classList.remove('drop-target');
+  }
+});
+
+
+function verifica() {
+if (draggableElement.id === "item01" && dropzoneElement.id === "dropzone01") {
+//alert("ok");
+// am atins tinta, obiectul nu mai trebuie sa fie dragabil
+document.getElementById("item01").classList.remove('draggable');
+document.getElementById("item01").style.border = "thin solid #0000FF";
+}
+if (draggableElement.id === "item02" && dropzoneElement.id === "dropzone02") {
+//alert("ok");
+// am atins tinta, obiectul nu mai trebuie sa fie dragabil
+document.getElementById("item02").classList.remove('draggable');
+document.getElementById("item02").style.border = "thin solid #0000FF";
+}
+if (draggableElement.id === "item03" && dropzoneElement.id === "dropzone02") {
+//alert("ok");
+// am atins tinta, obiectul nu mai trebuie sa fie dragabil
+document.getElementById("item03").classList.remove('draggable');
+document.getElementById("item03").style.border = "thin solid #0000FF";
+}
+};
+
+</script>
+
+
+</body>
+</html>
